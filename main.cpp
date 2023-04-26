@@ -10,7 +10,7 @@ enum{
 
 int main(){
 
-    int opc;
+    int opc, ref;
     char artist[30];
     char album[30];
     char title[30];
@@ -19,8 +19,11 @@ int main(){
 
     do{
         system("cls");
+        system("color a");
         
-        std::cout<<"Hash Table"<<std::endl<<std::endl;
+        std::cout<<"Hash Table: serialization and indexing."<<std::endl<<std::endl;
+        std::cout<<"Registros: "<<hashTable->getCounter()<<std::endl;
+        std::cout<<"Colisiones en registros: "<<hashTable->getCollisions()<<std::endl<<std::endl;
 
         std::cout<<AGREGAR<<") AGREGAR"<<std::endl;
         std::cout<<MOSTRAR<<") MOSTRAR"<<std::endl;
@@ -37,7 +40,13 @@ int main(){
             
             case AGREGAR:
                 system("cls");
+                system("color 1");
                 std::cin.ignore();
+
+                if(hashTable->isFull()){
+                    std::cout<<"Insert: la lista de registros esta llena..."<<std::endl;
+                    continue;
+                }
                 
                 std::cout<<"Artista: ";
                 std::cin.getline(artist, 30);
@@ -58,7 +67,12 @@ int main(){
 
             case MOSTRAR:
                 system("cls");
-
+                system("color b");
+                if(hashTable->isEmpty()){
+                    std::cout<<"Show: no hay registros existentes..."<<std::endl;
+                    system("pause");
+                    continue;
+                }
                 hashTable->show();
                 system("pause");
             break;
@@ -71,7 +85,26 @@ int main(){
 
             case CARGAR:
                 system("cls");
+                system("color 6");
                 hashTable->load();
+                system("pause");
+            break;
+
+            case ELIMINAR:
+                system("cls");
+                system("color 4");
+                if(hashTable->isEmpty()){
+                    std::cout<<"Delete: no hay registros existentes..."<<std::endl;
+                    system("pause");
+                    continue;
+                }
+                hashTable->show();
+                std::cout<<"Referencia del registro a eliminar: ";
+                std::cin>>ref;
+                fflush(stdin);
+
+                hashTable->deleteRegister(ref);
+
                 system("pause");
             break;
 

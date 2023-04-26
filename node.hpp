@@ -1,25 +1,25 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 #include <string.h>
+#define REGISTERS 20
 
 class Node{
-    //private:
-    public:
+    private:
         char artist[30];
         char album[30];
         char title[30];
         char year[5];
         int reference;
 
-        Node* next;
-        Node* prev;
 
-    //public:
+    public:
+        Node* collisions[REGISTERS];
+        int nCollisions;
         // Constructores
         Node(){
-            this->next = nullptr;
-            this->prev = nullptr;
+            for(int i=0; i<REGISTERS; i++) this->collisions[i] = nullptr;
             this->reference = 0;
+            this->nCollisions = 0;
         }
 
         Node(char* _artist, char* _album, char* _title, char* _year){
@@ -29,22 +29,32 @@ class Node{
             strcpy(this->year, _year);
 
             this->reference = 0;
-            this->next = nullptr;
-            this->prev = nullptr;
+            this->nCollisions = 0;
+            for(int i=0; i<REGISTERS; i++) this->collisions[i] = nullptr;
         }
 
         // Destructor
-        ~Node(){}
+        ~Node(){
+            delete[] artist;
+            delete[] album;
+            delete[] title;
+            delete[] year;
+        }
     
+        bool destroyNode(Node*);
+        void addCollision(Node*);
+
+
         // Getters
         const char *getArtist() const;
         const char* getAlbum() const;
         const char* getTitle() const;
         const char* getYear() const;
-        int& getReference();
+        int getReference();
 
         Node* getNext() const;
         Node* getPrev() const;
+        int getCollisions() const;
 
         // Setters
         void setNext(Node*);
@@ -54,7 +64,25 @@ class Node{
 
 };  // Total: 104
 
+bool Node::destroyNode(Node* node){
+    delete[] artist;
+    delete[] album;
+    delete[] title;
+    delete[] year;
+    delete node;
+    node = nullptr;
+}
+
+void Node::addCollision(Node* node){
+    this->collisions[nCollisions] = node;
+    this->nCollisions++;
+}
+
 // Getters
+
+int Node::getCollisions() const{
+    return nCollisions;
+}
 
 const char* Node::getArtist() const{
     return artist;
@@ -72,28 +100,11 @@ const char* Node::getYear() const{
     return year;
 }
 
-Node* Node::getNext() const{
-    return this->next;
-}
-
-Node* Node::getPrev() const{
-    return this->prev;
-}
-
-int& Node::getReference(){
-    return this->reference;
+int Node::getReference(){
+    return reference;
 }
 
 // Setters
-
-void Node::setNext(Node* node){
-    this->next = node;
-}
-
-void Node::setPrev(Node* node){
-    this->prev = node;
-}
-
 void Node::setReference(int _reference){
     this->reference = _reference;
 }
